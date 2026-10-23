@@ -1,5 +1,5 @@
 <div align="right">
-  <a href="README.ru.md">Русский</a> | <b>English</b>
+  <a href="README_RU.md">Русский</a> | <b>English</b>
 </div>
 
 # ansistated
