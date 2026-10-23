@@ -13,7 +13,7 @@ func NewRootCmd(cfg *config.Config) *cobra.Command {
 	rootCmd := &cobra.Command{
 		Use:     "ansistated",
 		Short:   "Templatizes pongo2 templates and provides a mechanism for changing variable values",
-		Version: "0.1.0",
+		Version: "0.1.1",
 		PersistentPreRunE: func(rootCmd *cobra.Command, args []string) error {
 			viper.BindPFlag("vars_dir", rootCmd.Flags().Lookup("vars-dir"))
 			viper.SetDefault("vars_dir", "~/.config/ansistated/vars")
@@ -41,6 +41,9 @@ func NewRootCmd(cfg *config.Config) *cobra.Command {
 
 	updateCmd := NewUpdateCmd(cfg)
 	rootCmd.AddCommand(updateCmd)
+
+	readCmd := NewReadCmd(cfg)
+	rootCmd.AddCommand(readCmd)
 
 	return rootCmd
 }

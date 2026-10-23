@@ -13,39 +13,52 @@
 ## Возможности
 
 - **Шаблонизация Pongo2 (Django/Jinja2-синтаксис)** с встроенными фильтрами для конвертации форматов цвета (`to_hex`, `to_rgb`, `to_strip_hex`).
+
+
 - **YAML Frontmatter в шаблонах**: каждый файл шаблона сам определяет целевой путь (`dest`), группу (`group`) и команду пост-обработки (`post_cmd`).
+
+
 - **Точечное обновление YAML (AST-based)**: команда `update` модифицирует переменные из JSON-потока, сохраняя комментарии, отступы и структуру исходных YAML-файлов.
+
+
 - **Многопоточный рендеринг**: параллельная обработка шаблонов с проверкой контрольных сумм для предотвращения лишних перезаписей на диск.
+
+
+> **Ограничение при слиянии (конфликты ключей):** Нельзя указывать разные простые значения для одного и того же ключа в разных файлах. Из-за параллельного чтения файлов результаты преобразования ключей могут быть непредсказуемыми.
+
 
 ---
 
 ## Установка
 
-### Вариант 1. Готовые бинарные файлы (Рекомендуется)
+### Вариант 1. Готовые бинарные файлы
 
 Скачайте архив для вашей платформы со страницы [Releases](https://github.com/m1101e/ansistated/releases/latest), распакуйте и переместите исполняемый файл в системный путь:
 
 ```bash
 # Пример для Linux x86_64:
-curl -sL https://github.com/m1101e/ansistated/releases/latest/download/ansistated_linux_amd64.tar.gz | tar -xz
+curl -sL [https://github.com/m1101e/ansistated/releases/latest/download/ansistated_linux_amd64.tar.gz](https://github.com/m1101e/ansistated/releases/latest/download/ansistated_linux_amd64.tar.gz) | tar -xz
 sudo mv ansistated /usr/local/bin/
+
 ```
 
 ### Вариант 2. Через `go install`
 
-Если в системе установлен Go (1.21+):
+Если в системе установлен Go:
 
 ```bash
-go install github.com/m1101e/ansistated@latest
+go install [github.com/m1101e/ansistated@latest](https://github.com/m1101e/ansistated@latest)
+
 ```
 
 ### Вариант 3. Сборка из исходников
 
 ```bash
-git clone https://github.com/m1101e/ansistated.git
+git clone [https://github.com/m1101e/ansistated.git](https://github.com/m1101e/ansistated.git)
 cd ansistated
 go build -ldflags="-s -w" -o ansistated main.go
 sudo mv ansistated /usr/local/bin/
+
 ```
 
 ---
@@ -53,14 +66,17 @@ sudo mv ansistated /usr/local/bin/
 ## Конфигурация
 
 По умолчанию `ansistated` использует следующие пути:
+
 * **Директория переменных:** `~/.config/ansistated/vars/`
 * **Директория шаблонов:** `~/.config/ansistated/templates/`
 * **Файл настроек (опционально):** `~/.config/ansistated/ansistated.yaml`
 
 Пример переопределения через `ansistated.yaml`:
+
 ```yaml
 vars_dir: "~/.config/ansistated/vars"
 templates_dir: "~/.config/ansistated/templates"
+
 ```
 
 Пути также можно передавать через флаги `--vars-dir` и `--templates-dir`.
@@ -81,6 +97,7 @@ colors:
   background: "#1e1e2e"
   foreground: "#cdd6f4"
   accent: "rgb(137, 180, 250)"
+
 ```
 
 ### 2. Шаблоны (`templates/*`)
@@ -99,11 +116,28 @@ foreground = "{{ colors.foreground | to_hex }}"
 
 [colors.cursor]
 cursor = "{{ colors.accent | to_hex }}"
+
 ```
 
 ---
 
 ## Использование CLI
+
+### Чтение переменных (`read`)
+
+Команда `read` выводит значения переменных в `stdout` в выбранном формате. Данные собираются из конкретного файла или объединяются из нескольких файлов.
+
+```bash
+# Вывести все переменные (из всех файлов) в формате JSON по умолчанию
+ansistated read
+
+# Вывести переменные конкретной группы в формате YAML
+ansistated read --group terminal --yaml
+
+# Вывести переменные из конкретного файла (по относительному пути от vars)
+ansistated read --file theme/colors.yaml
+
+```
 
 ### Рендеринг (`render`)
 
@@ -118,6 +152,7 @@ ansistated render --groups terminal
 
 # Рендеринг нескольких групп
 ansistated render --groups terminal,wm
+
 ```
 
 ### Обновление переменных (`update`)
@@ -130,6 +165,7 @@ echo '{"colors": {"background": "#000000"}}' | ansistated update -f colors.yaml
 
 # Обновление всех файлов определенной группы
 echo '{"colors": {"accent": "#fab387"}}' | ansistated update -g theme
+
 ```
 
 ---
@@ -139,7 +175,7 @@ echo '{"colors": {"accent": "#fab387"}}' | ansistated update -g theme
 В шаблонах доступны встроенные фильтры для преобразования форматов цвета:
 
 | Фильтр | Назначение | Пример входа | Пример выхода |
-| :--- | :--- | :--- | :--- |
+| --- | --- | --- | --- |
 | `to_hex` | Приводит цвет к формату `#RRGGBB` | `rgb(255, 0, 0)` | `#ff0000` |
 | `to_strip_hex` | Приводит к hex без символа `#` | `#ff0000` | `ff0000` |
 | `to_rgb` | Извлекает значения компонентов `R, G, B` | `#ffffff` | `255, 255, 255` |
@@ -147,4 +183,5 @@ echo '{"colors": {"accent": "#fab387"}}' | ansistated update -g theme
 ---
 
 ## Лицензия
+
 MIT
