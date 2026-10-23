@@ -13,7 +13,7 @@ import (
 
 func NewReadCmd(cfg *config.Config) *cobra.Command {
 	readCmd := &cobra.Command{
-		Use:   "get",
+		Use:   "read",
 		Short: "Outputs merged variable values to stdout in the selected format",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			group, err := cmd.Flags().GetString("group")
